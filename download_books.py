@@ -8,7 +8,7 @@ import zipfile
 class BookGetter:
 
     @staticmethod
-    def get_list(key: str="Wodehouse", selection: str="Authors") -> list:
+    def get_list(key: str="Shakespeare", selection: str="Authors") -> list:
         GUTENBERG_CSV_URL = "https://www.gutenberg.org/cache/epub/feeds/pg_catalog.csv.gz"
 
         r = requests.get(GUTENBERG_CSV_URL)
@@ -47,6 +47,7 @@ class BookGetter:
                 print(404)
                 
         return "404?"
+
 
 if __name__ == "__main__":
     book = BookGetter.get_text(BookGetter.get_list()[5])
