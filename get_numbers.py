@@ -1,0 +1,64 @@
+from download_books import Book_Getter
+
+class Analyze_Book:
+    @staticmethod
+    def frequency(book_text_words: list[str], output_file: str, current_freq: dict = {}) -> dict:
+        freq_dict = current_freq
+
+        # Count the occurances of each word
+        for word in book_text_words:
+            # Add 1 to the frequency count
+            if word in freq_dict.keys():
+                freq_dict[word] += 1
+            else:
+                freq_dict[word] = 1
+
+        # Write frequency to file
+        lines = []
+        for key in freq_dict:
+            lines.append(f"{key}: {freq_dict[key]}\n")
+
+        with open(output_file, "w") as file:
+            file.writelines(lines)
+
+        print("Freq done")
+
+        return freq_dict
+
+    @staticmethod
+    def relation(book_text_words: list[str], freq_dict: dict, output_file: str, current_rel: dict = {}) -> dict:
+        rel_dict = current_rel
+
+        # Count the occurances of words that go after other words
+        for word_index in range(len(book_text_words) - 1):
+            word = book_text_words[word_index]
+            next_word = book_text_words[word_index + 1]
+
+            if word not in rel_dict:
+                rel_dict[word] = {}
+
+            rel_dict[word][next_word] = rel_dict[word].get(next_word, 0) + 1
+
+            print(f"{word_index} : {len(book_text_words)}")
+
+        # Write ^ to file
+        lines = []
+        for key in freq_dict:
+            lines.append(f"{key}: {rel_dict[key]}\n")
+
+        with open(output_file, "w") as file:
+            file.writelines(lines)
+
+        return rel_dict
+
+if __name__ == "__main__":
+    author = "Shakespeare"
+
+    authors_list = Book_Getter.get_list(author)
+
+    print(authors_list[25]["Title"])
+    book_text_words = Book_Getter.get_text(authors_list[25])
+
+
+    freq = Analyze_Book.frequency(book_text_words, r"FrequencyFiles\TestFreq.txt")
+    rel = Analyze_Book.relation(book_text_words, freq, r"FrequencyFiles\TestPred.txt")

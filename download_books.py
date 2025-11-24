@@ -2,10 +2,9 @@ import csv
 from io import StringIO, BytesIO
 import requests
 import gzip
-import re
-import zipfile
+from string import punctuation
 
-class BookGetter:
+class Book_Getter:
 
     @staticmethod
     def get_list(key: str="Shakespeare", selection: str="Authors") -> list:
@@ -26,7 +25,7 @@ class BookGetter:
         return book_list
     
     @staticmethod
-    def get_text(book) -> str:
+    def get_text(book) -> list:
         book_id = book["Text#"]
         base_url = f"https://www.gutenberg.org/files/{book_id}"
 
@@ -42,15 +41,27 @@ class BookGetter:
             r = requests.get(url)
             if r.status_code == 200:
 
-                return r.text
+                break
             else:
                 print(404)
                 
-        return "404?"
+        book_text = r.text
+
+        # Remove punctuation
+        for char in punctuation:
+            book_text = book_text.replace(char, " ")
+
+        # Get rid of new lines
+        book_text = book_text.replace("\n", " ")
+
+        # Make everything upper case
+        book_text = book_text.upper()
+
+        # Seperate into list of words
+        book_text_words = book_text.split(" ")
+
+        return book_text_words
 
 
 if __name__ == "__main__":
-    book = BookGetter.get_text(BookGetter.get_list()[5])
-
-    with open(r"testing.txt", "w") as file:
-        file.write(book)
+    book = Book_Getter.get_text(Book_Getter.get_list()[5])
