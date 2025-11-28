@@ -3,6 +3,7 @@ from io import StringIO, BytesIO
 import requests
 import gzip
 from string import punctuation
+import re
 
 class Book_Getter:
 
@@ -45,7 +46,11 @@ class Book_Getter:
             else:
                 print(404)
                 
-        book_text = r.text
+        all_text = r.text
+        book_text = re.split(r"\*\*\*.*?\*\*\*", all_text)[1].strip()
+
+        # with open("test_text.txt", "w") as file:
+        #     file.write(book_text)
 
         # Remove punctuation
         for char in punctuation:
@@ -65,4 +70,11 @@ class Book_Getter:
 
 
 if __name__ == "__main__":
-    book = Book_Getter.get_list()
+    book_list = Book_Getter.get_list()
+
+    book = book_list[25]
+
+    text = Book_Getter.get_text(book)
+
+    print("done")
+    

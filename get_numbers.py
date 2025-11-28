@@ -55,7 +55,7 @@ class Analyze_Book:
             
             rel_dict[word][next_word] = rel_dict[word].get(next_word, 0) + 1
 
-            print(f"{word_index} : {len(book_text_words)}")
+            # print(f"{word_index} : {len(book_text_words)}")
 
         # Write ^ to file
         lines = []
@@ -67,8 +67,9 @@ class Analyze_Book:
                 try:
                     file.write(f"{line}")
                 except UnicodeEncodeError:
-                    print(line)
-                    sleep(2)
+                    # print(line)
+                    # sleep(2)
+                    pass
 
         return rel_dict
 
