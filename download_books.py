@@ -53,6 +53,7 @@ class Book_Getter:
 
         # Get rid of new lines
         book_text = book_text.replace("\n", " ")
+        book_text = book_text.replace("\r", " ")
 
         # Make everything upper case
         book_text = book_text.upper()
@@ -64,4 +65,4 @@ class Book_Getter:
 
 
 if __name__ == "__main__":
-    book = Book_Getter.get_text(Book_Getter.get_list()[5])
+    book = Book_Getter.get_list()
