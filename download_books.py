@@ -1,5 +1,5 @@
 import csv
-from io import StringIO, BytesIO
+from io import StringIO
 import requests
 import gzip
 from string import punctuation
@@ -54,7 +54,10 @@ class Book_Getter:
 
         # Remove punctuation
         for char in punctuation:
-            book_text = book_text.replace(char, " ")
+            if char in "'-":
+                pass
+            else:
+                book_text = book_text.replace(char, " ")
 
         # Get rid of new lines
         book_text = book_text.replace("\n", " ")

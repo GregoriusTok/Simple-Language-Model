@@ -1,5 +1,6 @@
 from download_books import Book_Getter
 from time import sleep
+from ast import literal_eval
 
 class Analyze_Book:
     @staticmethod
@@ -31,10 +32,9 @@ class Analyze_Book:
                 try:
                     file.write(f"{line}\n")
                 except UnicodeEncodeError:
-                    print(line)
-                    sleep(2)
-
-        print("Freq done")
+                    # print(line)
+                    # sleep(2)
+                    pass
 
         return freq_dict
 
@@ -72,6 +72,28 @@ class Analyze_Book:
                     pass
 
         return rel_dict
+
+    @staticmethod
+    def file_to_dict(input_file: str, output_dict: dict = {}):
+        with open(input_file, "r") as file:
+            file_lines = file.readlines()
+            for line in file_lines:
+                line.strip()
+
+                if not line:
+                    continue
+
+                key, value = line.split(":", 1)
+                key = key.strip()
+
+                if not key:
+                    continue
+
+                value = literal_eval(value)
+
+                output_dict[key] = value
+
+            return output_dict
 
 if __name__ == "__main__":
     author = "Shakespeare"

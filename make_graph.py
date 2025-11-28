@@ -1,58 +1,25 @@
 import networkx as nx
 import matplotlib.pyplot as mpl
-from ast import literal_eval
-
-def file_to_dict(input_file: str, ouput_dict: dict = {}, debug = True) -> dict:
-
-    with open(input_file, "r") as file:
-        file_lines = file.readlines()
-        for line in file_lines:
-            line.strip()
-
-            if not line:
-                continue
-
-            key, value = line.split(":", 1)
-            key = key.strip()
-
-            if not key:
-                continue
-
-            value = literal_eval(value)
-
-            ouput_dict[key] = value
-
-            if debug: 
-                print(f"{file_lines.index(line)} : {len(file_lines)}")
-
-        return ouput_dict
      
+class Graph_Generator:
+    @staticmethod
+    def gen_graph(pred_dict, freq_dict, word_cutoff = 1000):
+        G = nx.Graph()
 
-def gen_graph(pred_dict, freq_dict):
-    graph = nx.Graph()
+        for word in freq_dict:
+            if word in pred_dict and freq_dict[word] > word_cutoff:
+                for related in pred_dict[word]:
+                    if related in freq_dict and freq_dict[related] > word_cutoff:
+                        G.add_edge(word, related, weight=pred_dict[word][related])
 
-    for key in pred_dict:
-        if key not in freq_dict or freq_dict[key] < word_cutoff:
-            continue
+        pos = nx.spring_layout(G, weight="weight", k=2, seed=3, iterations=1000)
+        weights = [G[u][v]["weight"] for u, v in G.edges()]
 
-        for connection in pred_dict[key]:
-            if connection not in freq_dict or freq_dict[connection] < word_cutoff:
-                continue
+        nx.draw_networkx_nodes(G, pos, node_size=5)
+        nx.draw_networkx_labels(G, pos)
+        nx.draw_networkx_edges(G, pos, edge_color="#a1a1a1")
 
-            graph.add_edge(key, connection)
+        mpl.axis("off")
+        mpl.show()
 
-        print(f"key {list(pred_dict.keys()).index(key)} : {len(list(pred_dict.keys()))}")
-
-    return graph
-
-if __name__ == "__main__":    
-    pred_dict = {}
-    freq_dict = {}
-
-    word_cutoff = 100
-
-
-    file_to_dict(r"FrequencyFiles\TestFreq.txt", freq_dict)
-    file_to_dict(r"FrequencyFiles\TestPred.txt", pred_dict)
-    
     
