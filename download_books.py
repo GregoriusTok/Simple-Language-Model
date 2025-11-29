@@ -4,6 +4,8 @@ import requests
 import gzip
 from string import punctuation
 import re
+import unicodedata
+
 
 class Book_Getter:
 
@@ -48,6 +50,11 @@ class Book_Getter:
                 
         all_text = r.text
         book_text = re.split(r"\*\*\*.*?\*\*\*", all_text)[1].strip()
+
+        book_text = unicodedata.normalize("NFKC", book_text)
+        book_text = book_text.replace("\xa0", "")
+
+        book_text = "".join(ch for ch in book_text if ch.isprintable())
 
         # with open("test_text.txt", "w") as file:
         #     file.write(book_text)

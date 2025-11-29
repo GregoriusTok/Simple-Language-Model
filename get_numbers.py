@@ -1,5 +1,4 @@
 from download_books import Book_Getter
-from time import sleep
 from ast import literal_eval
 
 class Analyze_Book:
@@ -25,7 +24,7 @@ class Analyze_Book:
         # Write frequency to file
         lines = []
         for key in sorted_freq_keys:
-            lines.append(f"{key}: {freq_dict[key]}")
+            lines.append(f"{key}:{freq_dict[key]}")
 
         with open(output_file, "w") as file:
             for line in lines:
@@ -60,7 +59,8 @@ class Analyze_Book:
         # Write ^ to file
         lines = []
         for key in freq_dict:
-            lines.append(f"{key}: {rel_dict[key]}\n")
+            if key in rel_dict:
+                lines.append(f"{key}:{rel_dict[key]}\n")
 
         with open(output_file, "w") as file:
             for line in lines:
@@ -74,7 +74,7 @@ class Analyze_Book:
         return rel_dict
 
     @staticmethod
-    def file_to_dict(input_file: str, output_dict: dict = {}):
+    def file_to_dict(input_file: str, output_dict: dict):
         with open(input_file, "r") as file:
             file_lines = file.readlines()
             for line in file_lines:

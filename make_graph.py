@@ -3,8 +3,10 @@ import matplotlib.pyplot as mpl
      
 class Graph_Generator:
     @staticmethod
-    def gen_graph(pred_dict, freq_dict, word_cutoff = 1000):
+    def gen_graph(pred_dict: dict[str, dict[str, int]], freq_dict: dict[str, int], word_cutoff: int = 1000):
         G = nx.Graph()
+
+        # print(freq_dict)
 
         for word in freq_dict:
             if word in pred_dict and freq_dict[word] > word_cutoff:
